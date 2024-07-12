@@ -38,7 +38,7 @@ split_dfs = {}
 for letter in df['title'].str[0].unique():
     split_dfs[letter] = df[df['title'].str.startswith(letter)].copy()
 
-threshold = 1500
+threshold = 1000
 splits = []
 current_split = []
 
@@ -57,11 +57,14 @@ for letter, df_split in split_dfs.items():
     # Handle any remaining data in the last split
     if current_split:
         splits.append(pd.DataFrame(current_split))
-    threshold = 1500
-    if len(splits) > 1:
+
+    if len(splits) > 0:
         for i, s_df in enumerate(splits):
-            split_letter_split_dfs[letter + str(i)] = s_df
+            city_group_num = str(i + 1)
+            split_letter_split_dfs[letter +  ' zip' + city_group_num] = s_df
     splits = []
+    current_split = []
+    threshold = 1000
 
 for letter_i, df_split_i in split_letter_split_dfs.items():
     print(letter_i)

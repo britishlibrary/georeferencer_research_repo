@@ -3,16 +3,18 @@ import pandas as pd
 import zipfile
 import os
 import shutil
+import pdb
 
 ext_drive_path = '/Volumes/VERBATIM HD'
-collection = 'osdrawings'
+# collection = 'osdrawings'
+collection = 'goad'
+# Also change name of containing folder for files based on collection
 
 ssheet_path = f'./xlsxs/{collection}.xlsx'
 metadata_path = f'./metadata/{collection}/'
 metadata_groups_path = f'./metadata/{collection}/metadata_groups/'
 geotiff_path = f'{ext_drive_path}/georef_geotiffs/{collection}/'
 zip_path = f'{ext_drive_path}/repo_zip_groups/{collection}/'
-
 
 if not os.path.isdir(zip_path):
     os.makedirs(zip_path)
@@ -28,6 +30,7 @@ def zip_files(zip_filename, file_list, folder):
     zipf.close()
 
 groups_files = [os.path.join(metadata_groups_path, f) for f in os.listdir(metadata_groups_path)]
+groups_files = [item for item in groups_files if not '.DS_Store' in item]
 
 # All OSDrawings with two maps on same sheet
 subsidiary_two_files = []
@@ -49,16 +52,22 @@ for f in groups_files:
          if file_second_map in subsidiary_two_files:
              to_zip_files.append(file_second_map)
 
-    letter = os.path.splitext(os.path.basename(f))[0]
+    letter_zip_fname = os.path.splitext(os.path.basename(f))[0]
+
+    # CHANGE name of containing folder for zip files based on collection
+    # osdrawings
+    # letter = letter_zip_fname[0]
+    # goad - not letter but city name
+    letter = letter_zip_fname.split(' zip')[0]
 
     zip_letter_path = f'{zip_path}/{letter}/'
     if not os.path.isdir(zip_letter_path):
         os.makedirs(zip_letter_path)
 
-    zip_filename = f'{zip_letter_path}{letter}.zip'
+    zip_filename = f'{zip_letter_path}{letter_zip_fname}.zip'
 
-    ssheet_filename = f'{metadata_groups_path}{letter}.csv'
-    shutil.copy(ssheet_filename, f'{zip_letter_path}{letter}.csv')
+    ssheet_filename = f'{metadata_groups_path}{letter_zip_fname}.csv'
+    shutil.copy(ssheet_filename, f'{zip_letter_path}{letter_zip_fname}.csv')
 
     # Call the function to zip the files
     zip_files(zip_filename, to_zip_files, letter)
