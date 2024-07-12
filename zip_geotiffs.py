@@ -6,7 +6,9 @@ import shutil
 import pdb
 
 ext_drive_path = '/Volumes/VERBATIM HD'
-collection = 'osdrawings'
+# collection = 'osdrawings'
+collection = 'goad'
+# Also change name of containing folder for files based on collection
 
 ssheet_path = f'./xlsxs/{collection}.xlsx'
 metadata_path = f'./metadata/{collection}/'
@@ -52,10 +54,11 @@ for f in groups_files:
 
     letter_zip_fname = os.path.splitext(os.path.basename(f))[0]
 
+    # CHANGE name of containing folder for zip files based on collection
     # osdrawings
-    letter = letter_zip_fname[0]
+    # letter = letter_zip_fname[0]
     # goad - not letter but city name
-    # letter = letter_zip_fname.split(' zip')[0]
+    letter = letter_zip_fname.split(' zip')[0]
 
     zip_letter_path = f'{zip_path}/{letter}/'
     if not os.path.isdir(zip_letter_path):
